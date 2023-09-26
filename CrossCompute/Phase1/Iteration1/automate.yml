@@ -19,7 +19,7 @@ input:
 # output configuration
 output:
   variables:
-    - id: maze
+    - id: mazeFile
       view: text
       path: maze.txt
 
