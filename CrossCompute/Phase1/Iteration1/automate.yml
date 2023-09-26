@@ -13,14 +13,14 @@ input:
   # input variables
   variables:
     - id: data
-      view: csv
+      view: string
       path: data.csv
 
 # output configuration
 output:
   variables:
     - id: maze
-      view: txt
+      view: text
       path: maze.txt
 
 # batches configuration
@@ -29,6 +29,6 @@ batches:
 
 # script configuration
 scripts:
-  - command: python3.9 run.ipynb {input_folder} {output_folder}
+  - command: python3.9 run.py {input_folder} {output_folder}
 
 # Done with automate.yml
