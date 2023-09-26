@@ -1,0 +1,164 @@
+Metadata-Version: 2.1
+Name: crosscompute
+Version: 0.9.2.12
+Summary: Automate your Jupyter notebooks and scripts as tools, reports, dashboards.
+Home-page: https://crosscompute.com
+Author: CrossCompute Inc.
+Author-email: support@crosscompute.com
+License: MIT
+Project-URL: Bug Tracker, https://github.com/crosscompute/crosscompute/issues
+Project-URL: Documentation, https://github.com/crosscompute/crosscompute-docs
+Project-URL: Source Code, https://github.com/crosscompute/crosscompute
+Platform: any
+Classifier: Development Status :: 3 - Alpha
+Classifier: Framework :: Pyramid
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Information Technology
+Classifier: Intended Audience :: Science/Research
+Classifier: Intended Audience :: System Administrators
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: POSIX
+Classifier: Programming Language :: Python :: 3
+Classifier: Topic :: Internet :: WWW/HTTP :: Dynamic Content
+Classifier: Topic :: Internet :: WWW/HTTP :: WSGI
+Classifier: Topic :: Internet :: WWW/HTTP :: WSGI :: Application
+Classifier: Topic :: Software Development :: Libraries :: Application Frameworks
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+License-File: LICENSE.md
+Requires-Dist: importlib-metadata (>=4.10.1)
+Requires-Dist: invisibleroads-macros-disk (>=1.2.1)
+Requires-Dist: invisibleroads-macros-log (>=1.0.6)
+Requires-Dist: invisibleroads-macros-process (>=0.1.1)
+Requires-Dist: invisibleroads-macros-security (>=1.0.2)
+Requires-Dist: invisibleroads-macros-text (>=1.1.2)
+Requires-Dist: invisibleroads-macros-web[markdown] (>=0.2.0)
+Requires-Dist: markdown
+Requires-Dist: nbconvert
+Requires-Dist: nbformat
+Requires-Dist: pyramid
+Requires-Dist: pyramid-jinja2
+Requires-Dist: ruamel.yaml
+Requires-Dist: tomli
+Requires-Dist: waitress
+Requires-Dist: watchgod
+Provides-Extra: test
+Requires-Dist: pytest-cov ; extra == 'test'
+Requires-Dist: pytest-xdist ; extra == 'test'
+Requires-Dist: requests-cache ; extra == 'test'
+
+# CrossCompute Analytics Automation Framework
+
+Automate your Jupyter notebooks and scripts as web-based reports, tools, widgets, dashboards, forms. Use this framework to create your own automations, then serve locally or deploy on your own instance of the [CrossCompute Analytics Automation System](https://docs.crosscompute.com).
+
+- Reports are documents that update when the data changes.
+- Forms are step-by-step questions that generate a specific web-based report.
+- Tools are forms that transform input variables into output variables.
+- Widgets are interactive visualizations that update when the data changes.
+- Dashboards are widgets in a layout.
+
+Here are some available extensions:
+
+- [crosscompute-views-map](https://github.com/crosscompute/crosscompute-views-map)
+- [crosscompute-printers-pdf](https://github.com/crosscompute/crosscompute-printers-pdf)
+- [jupyterlab-crosscompute](https://github.com/crosscompute/jupyterlab-crosscompute)
+
+Here are some available views:
+
+- link
+- string
+- number
+- password
+- email
+- text
+- markdown
+- image
+- radio
+- table
+- frame
+- map-mapbox (crosscompute-views-map)
+- map-mapbox-location (crosscompute-views-map)
+- map-deck-screengrid (crosscompute-views-map)
+
+[Here are the currently supported configuration options](https://github.com/crosscompute/crosscompute/blob/develop/crosscompute/templates/configuration.yaml).
+
+## Usage
+
+```bash
+# Upgrade package
+pip install crosscompute>=0.9.2 --upgrade
+
+# Initialize configuration
+crosscompute
+
+# Serve automation
+crosscompute automate.yml
+```
+
+Here are some tutorials and examples:
+- [Examples](https://crosscompute.net) [[source](https://github.com/crosscompute/crosscompute-examples)]
+- [Documentation](https://docs.crosscompute.com) [[source](https://github.com/crosscompute/crosscompute-docs)]
+- [Forum](https://forum.crosscompute.com)
+
+## Development
+
+```bash
+# Clone repository
+git clone https://github.com/crosscompute/crosscompute
+
+# Install with dependencies for tests
+cd crosscompute
+pip install -e .[test]
+
+# Run tests
+pytest --cov=crosscompute --cov-report term-missing:skip-covered tests
+
+# Build package for PyPI
+pip install build
+python -m build --sdist --wheel
+
+# Publish package on PyPI
+pip install twine --upgrade
+python -m twine upload dist/*
+```
+
+## Troubleshooting
+
+### SyntaxError: Invalid Syntax
+
+If you get the following error, you are running on an older version of Python:
+
+```
+$ crosscompute
+
+    while chunk := f.read(CHUNK_SIZE_IN_BYTES):
+                 ^
+SyntaxError: invalid syntax
+```
+
+To solve this issue, create a virtual environment using python >= 3.9.
+
+```
+sudo dnf -y install python3.9
+# sudo apt -y install python3.9
+
+python3.9 -m venv ~/.virtualenvs/crosscompute
+source ~/.virtualenvs/crosscompute/bin/activate
+
+pip install crosscompute>=0.9.2
+```
+
+## Acknowledgments
+
+- [Olga Ryabtseva](https://www.linkedin.com/in/olga-creutzburg)
+- [Salah Ahmed](https://www.linkedin.com/in/salahspage)
+- [Rodrigo Guarachi](https://www.linkedin.com/in/rmguarachi)
+- [Polina Chernomaz](https://www.linkedin.com/in/polinac)
+- [Miguel Ángel Gordián](https://www.linkedin.com/in/miguelgordian)
+- [Noé Domínguez Porras](https://www.linkedin.com/in/noedominguez)
+- [Marta Moreno](https://www.linkedin.com/in/marta-moreno-07364b82)
+- [Ning Wei](https://www.linkedin.com/in/ning-wei-8152393b)
+- [Kashfi Fahim](https://www.linkedin.com/in/kashfifahim)
+- [Elaine Chan](https://www.linkedin.com/in/chanelaine)
+- [Aida Shoydokova](https://www.linkedin.com/in/ashoydok)
+- [Jennifer Ruda](https://www.linkedin.com/in/jruda)

@@ -1,0 +1,53 @@
+{% extends BASE_JINJA2 %}
+
+{% block body_js %}
+{{ super() -}}
+let mutationTimestamp = {{ mutation_timestamp }};
+let pingInterval = {{ MINIMUM_PING_INTERVAL }};
+async function refreshPage() {
+  response = await fetch(location.href, { method: 'head' });
+  if (response.ok) {
+    location.reload();
+  } else {
+    location.href = '{{ ROOT_URI or '/' }}';
+  }
+}
+async function processMutations() {
+  const uri = '{{ ROOT_URI }}{{ mutation_uri }}';
+  try {
+    const response = await fetch(`${uri}?t=${mutationTimestamp}`);
+    const d = await response.json();
+    const { styles, variables } = d;
+    if (
+      d.server_timestamp != {{ SERVER_TIMESTAMP }} ||
+      d.configurations.length ||
+      d.templates.length
+    ) {
+      refreshPage();
+    } else if (styles.length) {
+      const { origin } = location;
+      for (var e of document.getElementsByTagName('link')) {
+        if (e.rel !== 'stylesheet' || new URL(e.href).origin !== origin) {
+          continue;
+        }
+        e.href += '?' + Date.now();
+      }
+{% if mode_name != 'input' %}
+    } else if (variables.length) {
+      for (const variable of variables) {
+        refreshVariable(variable.id);
+      }
+{% endif %}
+    }
+    mutationTimestamp = d.mutation_timestamp;
+    pingInterval = {{ MINIMUM_PING_INTERVAL }};
+  } catch (error) {
+    console.error(error);
+    if (pingInterval < {{ MAXIMUM_PING_INTERVAL }}) {
+      pingInterval *= 1.1;
+    }
+  }
+  setTimeout(processMutations, pingInterval);
+}
+setTimeout(processMutations, pingInterval);
+{%- endblock %}

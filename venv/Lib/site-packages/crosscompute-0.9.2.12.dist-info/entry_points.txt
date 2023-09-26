@@ -1,0 +1,15 @@
+[console_scripts]
+crosscompute = crosscompute.scripts.launch:do
+
+[crosscompute.views]
+email = crosscompute.routines.variable.EmailView
+frame = crosscompute.routines.variable.FrameView
+image = crosscompute.routines.variable.ImageView
+link = crosscompute.routines.variable.LinkView
+markdown = crosscompute.routines.variable.MarkdownView
+number = crosscompute.routines.variable.NumberView
+password = crosscompute.routines.variable.PasswordView
+radio = crosscompute.routines.variable.RadioView
+string = crosscompute.routines.variable.StringView
+table = crosscompute.routines.variable.TableView
+text = crosscompute.routines.variable.TextView
