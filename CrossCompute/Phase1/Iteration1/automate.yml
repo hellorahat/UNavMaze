@@ -13,14 +13,14 @@ input:
   # input variables
   variables:
     - id: data
-      view: string
+      view: file
       path: data.csv
 
 # output configuration
 output:
   variables:
     - id: mazeFile
-      view: text
+      view: link
       path: maze.txt
 
 # batches configuration

@@ -13,7 +13,7 @@ def csvToList(f):
     :param f (str): The CSV to be converted.
     :return: 2D list
     """
-    with open(f, 'r') as file:
+    with open(f.name, 'r') as file:
         csvData = list(csv.reader(file))
         rowNum = len(csvData)
         colNum = len(csvData[0])
@@ -77,9 +77,9 @@ def writeMaze(mazeList):
     :param fileName: The name of the file.
     """
     completeName = join(output_folder, "maze.txt")
-    mazeFile = open(completeName,"w")
+    mazeFile = open(completeName,"a")
+    row = ""
     for i in range(len(mazeList)):
-        row = ""
         for j in range(len(mazeList[0])):
             if row != "":
                 row += " "
@@ -87,13 +87,13 @@ def writeMaze(mazeList):
                 row += " "
             else:
                 row += str(mazeList[i][j])
-        mazeFile.writelines(row)
-    mazeFile.close()
-
+        row += "\n"
+        mazeFile.write(row)
+        row = ""
 ###
 
 completeName = join(input_folder, "data.csv")
-with(open(completeName), 'r') as file:
+with open(completeName, 'r') as file:
     data = csvToList(file)
     validation = validateMaze(data)
     if validation[0]:
