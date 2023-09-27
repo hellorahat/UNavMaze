@@ -21,7 +21,7 @@ output:
   variables:
     - id: mazeFile
       view: link
-      path: maze.txt
+      path: mazePath.csv
 
 # batches configuration
 batches:
@@ -31,4 +31,9 @@ batches:
 scripts:
   - command: python3 run.py {input_folder} {output_folder}
 
-# Done with automate.yml
+environment:
+  packages:
+    - id: networkx[default]
+      manager: pip
+    - id: matplotlib==3.7.2
+      manager: pip

@@ -1,8 +1,14 @@
+import pkg_resources
+print([p.project_name for p in pkg_resources.working_set])
+
 from os import getenv
 from pathlib import Path
 import csv
 from sys import argv
 from os.path import join
+import networkx as nx
+import matplotlib.pyplot as plt
+
 input_folder, output_folder = argv[1:]
 
 ###
@@ -88,6 +94,54 @@ def writeMaze(mazeList):
             else:
                 row += str(mazeList[i][j])
         mazeFile.write(row + "\n")
+        
+def listToNetworkXGraph(mazeList, display=False):
+    """
+    Converts a list to a weighted NetworkX graph.
+    :param mazeList (list): The 2D list to be referenced
+    :param display (bool): Whether to display the graph. Default is False.
+    :return: graph
+    """
+    G = nx.grid_2d_graph(len(mazeList),len(mazeList[0])) # Create a row X col NetworkX grid.
+    for u,v,d in G.edges(data=True):
+        if mazeList[v[0]][v[1]] == "W":
+            d["weight"] = 999999
+        elif isinstance(mazeList[v[0]][v[1]], int):
+            d["weight"] = int(mazeList[v[0]][v[1]])
+        else:
+            d["weight"] = 1
+    nx.write_weighted_edgelist(G, "weighted.edgelist")
+    if display==True:
+        colorMap = []
+        labels = dict()
+        pos = dict()
+        count = 0
+        for i in range(len(mazeList)):
+            for j in range(len(mazeList[0])):
+                pos[i,j] = j,len(mazeList)-i
+                labels[i,j] = mazeList[i][j]
+                if mazeList[i][j] == "W":
+                    colorMap.append("black")
+                elif mazeList[i][j] == "S":
+                    colorMap.append("green")
+                elif mazeList[i][j] == "E":
+                    colorMap.append("red")
+                elif mazeList[i][j].isnumeric():
+                    colorMap.append("brown")
+                else:
+                    colorMap.append("white")
+        print(len(colorMap))
+        # for n in G:
+            # if n == (1,0):
+            #     colorMap.append('red')
+            # else:
+            #     colorMap.append('green')
+        nx.draw_networkx(G,pos, node_color=colorMap, labels=labels, font_size=6)
+        # nx.draw_networkx(G,pos, node_color=colorMap, with_labels=False, font_size=6)
+        plt.axis("off")
+        completeName = join(output_folder, "mazeGraph.png")
+        plt.savefig(completeName, format="PNG")
+    return G
 ###
 
 completeName = join(input_folder, "data.csv")
@@ -95,7 +149,8 @@ with open(completeName, 'r') as file:
     data = csvToList(file)
     validation = validateMaze(data)
     if validation[0]:
-        writeMaze(data)
+        # writeMaze(data)
+        listToNetworkXGraph(data, display=True)
     else:
         print(validation[1])
         exit()
