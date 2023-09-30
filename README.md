@@ -2,10 +2,10 @@
  
 Tool that takes a maze as a CSV file and outputs a path as a CSV file.
 
-W - Symbol for wall (can not create path through walls).
-S - Symbol for start point.
-E - Symbol for end point.
-P - Symbol for path. If a path needs to be created through a weighted cell, it will be concatenated at the end of the cell; for example, a path through a cell with weight of "3" would appear "3P" instead of "P".
+W - Symbol for wall (can not create path through walls).\n
+S - Symbol for start point.\n
+E - Symbol for end point.\n
+P - Symbol for path. If a path needs to be created through a weighted cell, it will be concatenated at the end of the cell; for example, a path through a cell with weight of "3" would appear "3P" instead of "P".\n
 
 --
 
