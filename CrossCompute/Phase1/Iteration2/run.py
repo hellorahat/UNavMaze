@@ -1,6 +1,3 @@
-import pkg_resources
-print([p.project_name for p in pkg_resources.working_set])
-
 from os import getenv
 from pathlib import Path
 import csv
