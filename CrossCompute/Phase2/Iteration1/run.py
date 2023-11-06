@@ -155,26 +155,6 @@ def locateStartAndEnd(mazeList):
                 endPoint = i,j
     return startPoint, endPoint
 
-def mazeSolution(data, path):
-    """
-    Given a path, input the solution into a given list.
-    :param data (list): The list being referenced.
-    :param path (list): The path that will be added to the list.
-    """
-    for i in range(1,len(path)-1):
-        data[path[i][0]][path[i][1]] += "P"
-
-def exportCSV(data, folder, name):
-    """
-    Converts a list to a weighted NetworkX graph.
-    :param mazeList (list): The 2D list to be referenced
-    :param display (bool): Whether to display the graph. Default is False.
-    :return: graph
-    """
-    completeName = join(folder, name)
-    with open(completeName,"w",newline="") as pathcsv:
-        csvWriter = csv.writer(pathcsv,delimiter=',')
-        csvWriter.writerows(data)
 ###
 
 completeName = join(input_folder, "data.csv")
@@ -186,8 +166,12 @@ with open(completeName, 'r') as file:
         G = listToNetworkXGraph(data, display=False)
         startPoint, endPoint = locateStartAndEnd(data)
         shortestPath = calculatePath(G, startPoint, endPoint)
-        mazeSolution(data, shortestPath)
-        exportCSV(data, output_folder, "mazePath.csv")
+        for i in range(1,len(shortestPath)-1):
+            data[shortestPath[i][0]][shortestPath[i][1]] += "P"
+        completeName = join(output_folder, "mazePath.csv")
+        with open(completeName,"w",newline="") as pathcsv:
+            csvWriter = csv.writer(pathcsv,delimiter=',')
+            csvWriter.writerows(data)
             
     else:
         print(validation[1])
