@@ -166,10 +166,10 @@ def mazeSolution(data, path):
 
 def exportCSV(data, folder, name):
     """
-    Converts a list to a weighted NetworkX graph.
-    :param mazeList (list): The 2D list to be referenced
-    :param display (bool): Whether to display the graph. Default is False.
-    :return: graph
+    Export a csv file given data for contents of the maze
+    :param data (list): The list containing information about the maze.
+    :param folder: The output folder.
+    :param name: The name of the CSV file.
     """
     completeName = join(folder, name)
     with open(completeName,"w",newline="") as pathcsv:
