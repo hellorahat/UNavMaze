@@ -184,7 +184,7 @@ def getMinAndMax(data):
     Gets the minimum and maximum weight values from a maze.
     :param data: The 2D list to get the information from.
     """
-    min = 0
+    min = 999999999
     max = 0
     for i in range(len(data)):
         for v in range(len(data[0])):
@@ -197,52 +197,68 @@ def getMinAndMax(data):
                         max = int(entry)
     return min,max
         
-def putPixel(img, row, col, color):
+def putPixel(img, row, col, color, scale):
     """
-    Color a 15x15 square of pixels with a given color.
+    Color a square of pixels with a given color.
     :param img: The image to be colored.
     :param row: Row value.
     :param col: Col value.
     :param color (3-tuple): An rgb color value. 
     """
-    for j in range(15):
-        for k in range(15):
-            xPos = (row*15)+(j)
-            yPos = (col*15)+(k)
+    for j in range(scale):
+        for k in range(scale):
+            xPos = (row*scale)+(j)
+            yPos = (col*scale)+(k)
             img.putpixel((xPos,yPos), color)
 
-def placeText(img, row, col, text):
-    pass
+def labelWeights(img, data, scale):
+    I1 = ImageDraw.Draw(img)
+    font = ImageFont.truetype("arial.ttf",scale*.75) # arial must be installed on system
+    for i in range(len(data)):
+        for v in range(len(data[0])):
+            entry = data[i][v]
+            if len(entry) > 1: # if its a weight conatenated with a P
+                entry = entry[:-1] # remove the last character (P) so that we are left with only the weight
+                I1.text((v*scale+scale*.25,i*scale+scale*.1),entry,font=font,fill=(0,0,0))
+            elif entry.isnumeric(): # if its a weight
+                if int(entry) > 1:
+                    I1.text((v*scale+scale*.25,i*scale+scale*.1),entry,font=font,fill=(0,0,0))
+            elif entry.lower() == "s":
+                I1.text((v*scale+scale*.25,i*scale+scale*.1),entry,font=font,fill=(0,0,0))
+            elif entry.lower() == "e":
+                I1.text((v*scale+scale*.25,i*scale+scale*.1),entry,font=font,fill=(0,0,0))
+    # I1.text((row*15,col*15),text,fill=(0,0,0))
 
-def createImage(data):
+def createImage(data, scale):
     """
-    Create a 15x15 image using the PIL library.
+    Create a image of the maze using the PIL library.
     :param data: The 2D list with path to create an image from.
     """
-    width = len(data[0])*15
-    height = len(data)*15
+    width = len(data[0])*scale
+    height = len(data)*scale
     img  = Image.new(mode = "RGB", size = (width, height), color=(255,255,255))
     min,max = getMinAndMax(data)
     for i in range(len(data)):
         for v in range(len(data[0])):
             if data[i][v].lower() == "w": # if wall, color black
-                putPixel(img, v, i, (0,0,0))
+                putPixel(img, v, i, (0,0,0), scale)
             elif data[i][v].lower() == "p": # if path, color blue
-                putPixel(img, v, i, (137, 207, 240))
+                putPixel(img, v, i, (137, 207, 240), scale)
             elif len(data[i][v]) > 1:
                 if (data[i][v].lower())[-1] == "p": # if weight concatenated with path, color blue
-                    putPixel(img, v, i, (137, 207, 240))
+                    putPixel(img, v, i, (137, 207, 240), scale)
             elif data[i][v].lower() == "s": # if start, color green
-                putPixel(img, v, i, (0,255,0))
+                putPixel(img, v, i, (0,255,0), scale)
             elif data[i][v].lower() == "e": # if end, color red
-                putPixel(img, v, i, (255,0,0))
+                putPixel(img, v, i, (255,0,0), scale)
             elif data[i][v].isnumeric(): # if weighted cell, color brown based on min and max weights
                 if int(data[i][v]) > 1:
-                    red = 255 * (int(data[i][v]) - min) // (max-min) # scale red from 0 - 255 based on min and max values
+                    red = 50+(255-(255 * (int(data[i][v])-min) // (max-min))) # scale red from 0 - 255 based on min and max values | add 50 to the scaled value to ensure lightest brown instead of black if value is 0
                     green = red // 2 # green is red / 2 to make brown
                     blue = green // 2 # blue is green / 2 to make brown
-                    putPixel(img, v, i, (red,green,blue))
-            
+                    putPixel(img, v, i, (red,green,blue), scale)
+
+    labelWeights(img, data, scale)
     completeName = join(output_folder, "mazeImage.png")
     img.save(completeName)
 
@@ -257,8 +273,7 @@ with open(completeName, 'r') as file:
         startPoint, endPoint = locateStartAndEnd(data)
         shortestPath = calculatePath(G, startPoint, endPoint)
         mazeSolution(data, shortestPath)
-        createImage(data)
-            
+        createImage(data, 15)
     else:
         print(validation[1])
         exit()
