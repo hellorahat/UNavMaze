@@ -19,7 +19,7 @@ input:
 # output configuration
 output:
   variables:
-    - id: mazeFile
+    - id: mazeImage
       view: image
       path: mazeImage.png
 
