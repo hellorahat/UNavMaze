@@ -20,8 +20,8 @@ input:
 output:
   variables:
     - id: mazeFile
-      view: link
-      path: mazePath.csv
+      view: image
+      path: mazeImage.png
 
 # batches configuration
 batches:
@@ -36,4 +36,6 @@ environment:
     - id: networkx[default]
       manager: pip
     - id: matplotlib==3.7.2
+      manager: pip
+    - id: Pillow
       manager: pip

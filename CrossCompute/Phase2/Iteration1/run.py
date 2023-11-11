@@ -5,6 +5,9 @@ from sys import argv
 from os.path import join
 import networkx as nx
 import matplotlib.pyplot as plt
+from PIL import Image
+from PIL import ImageDraw
+from PIL import ImageFont
 
 input_folder, output_folder = argv[1:]
 
@@ -155,8 +158,71 @@ def locateStartAndEnd(mazeList):
                 endPoint = i,j
     return startPoint, endPoint
 
-###
+def mazeSolution(data, path):
+    """
+    Given a path, input the solution into a given list.
+    :param data (list): The list being referenced.
+    :param path (list): The path that will be added to the list.
+    """
+    for i in range(1,len(path)-1):
+        data[path[i][0]][path[i][1]] += "P"
 
+def exportCSV(data, folder, name):
+    """
+    Export a csv file given data for contents of the maze
+    :param data (list): The list containing information about the maze.
+    :param folder: The output folder.
+    :param name: The name of the CSV file.
+    """
+    completeName = join(folder, name)
+    with open(completeName,"w",newline="") as pathcsv:
+        csvWriter = csv.writer(pathcsv,delimiter=',')
+        csvWriter.writerows(data)
+
+def createImage(data):
+    width = len(data[0])*10
+    height = len(data)*10
+    img  = Image.new(mode = "RGB", size = (width, height), color=(255,255,255))
+    for i in range(len(data)):
+        for v in range(len(data[0])):
+            if data[i][v].lower() == "w":
+                for j in range(10):
+                    for k in range(10):
+                        yPos = (i*10)+(j)
+                        xPos = (v*10)+(k)
+                        img.putpixel((xPos,yPos), (0,0,0))
+            elif data[i][v].lower() == "p":
+                for j in range(10):
+                    for k in range(10):
+                        yPos = (i*10)+(j)
+                        xPos = (v*10)+(k)
+                        img.putpixel((xPos,yPos), (0,0,255))
+            elif len(data[i][v]) > 1:
+                if (data[i][v].lower())[-1] == "p":
+                    for j in range(10):
+                        for k in range(10):
+                            yPos = (i*10)+(j)
+                            xPos = (v*10)+(k)
+                            img.putpixel((xPos,yPos), (0,0,255))
+            elif data[i][v].lower() == "s":
+                for j in range(10):
+                    for k in range(10):
+                        yPos = (i*10)+(j)
+                        xPos = (v*10)+(k)
+                        img.putpixel((xPos,yPos), (0,255,0))
+            elif data[i][v].lower() == "e":
+                for j in range(10):
+                    for k in range(10):
+                        yPos = (i*10)+(j)
+                        xPos = (v*10)+(k)
+                        img.putpixel((xPos,yPos), (255,0,0))
+            elif data[i][v].isnumeric():
+                pass
+            
+    completeName = join(output_folder, "mazeImage.png")
+    img.save(completeName)
+
+###
 completeName = join(input_folder, "data.csv")
 with open(completeName, 'r') as file:
     data = csvToList(file)
@@ -166,12 +232,8 @@ with open(completeName, 'r') as file:
         G = listToNetworkXGraph(data, display=False)
         startPoint, endPoint = locateStartAndEnd(data)
         shortestPath = calculatePath(G, startPoint, endPoint)
-        for i in range(1,len(shortestPath)-1):
-            data[shortestPath[i][0]][shortestPath[i][1]] += "P"
-        completeName = join(output_folder, "mazePath.csv")
-        with open(completeName,"w",newline="") as pathcsv:
-            csvWriter = csv.writer(pathcsv,delimiter=',')
-            csvWriter.writerows(data)
+        mazeSolution(data, shortestPath)
+        createImage(data)
             
     else:
         print(validation[1])
