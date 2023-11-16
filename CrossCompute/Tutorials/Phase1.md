@@ -314,6 +314,72 @@ with open(completeName, 'r') as file:
         print(validation[1])
         exit()
 ```
+Upon running the crosscompute command and supplying an input, we recieve an image of a weighted NetworkX graph as an output.
 # Iteration 3
 ## Goal
 For Iteration 3, we use NetworkX to find an optimal path using the A* algorithm. We will then display the outputted path as a CSV by concatenating the solution cells with a **P**.
+
+## Configure run.py
+In order to find an optimal path using NetworkX, we first must identify the start and end points and note their position. So we create a function for locating the start and end points from a 2D list.
+```py
+def locateStartAndEnd(mazeList):
+    startPoint = (0,0)
+    endPoint = (0,0)
+    for i in range(len(mazeList)): # iterate through rows
+        for j in range(len(mazeList[0])): # iterate through each col
+            if mazeList[i][j] == "S":
+                startPoint = i,j
+            elif mazeList[i][j] == "E":
+                endPoint = i,j
+    return startPoint, endPoint
+```
+Using their positions, we compute the shortest path using the following command:
+```py
+def calculatePath(G, startPoint, endPoint):
+    return nx.astar_path(G, startPoint, endPoint)
+```
+We recieve a list of tuples containing positional value for the path from this command. We write the information to our 2D list so that we can write the entire maze from the list to a CSV.
+```py
+def mazeSolution(data, path):
+    """
+    Given a path, input the solution into a given list.
+    :param data (list): The list being referenced.
+    :param path (list): The path that will be added to the list.
+    """
+    for i in range(1,len(path)-1):
+        data[path[i][0]][path[i][1]] += "P" # We concatenate the P in front of any weighted cells, if any.
+```
+Now we read the 2D list into a CSV:
+```py
+def exportCSV(data, folder, name):
+    """
+    Export a csv file given data for contents of the maze
+    :param data (list): The list containing information about the maze.
+    :param folder: The output folder.
+    :param name: The name of the CSV file.
+    """
+    completeName = join(folder, name)
+    with open(completeName,"w",newline="") as pathcsv:
+        csvWriter = csv.writer(pathcsv,delimiter=',')
+        csvWriter.writerows(data)
+```
+Lastly, we modify the end of our script to include the new functions we created:
+```py
+completeName = join(input_folder, "data.csv")
+with open(completeName, 'r') as file:
+    data = csvToList(file)
+    validation = validateMaze(data)
+    if validation[0]:
+        # writeMaze(data)
+        G = listToNetworkXGraph(data, display=False)
+        # New functions
+        startPoint, endPoint = locateStartAndEnd(data)
+        shortestPath = calculatePath(G, startPoint, endPoint)
+        mazeSolution(data, shortestPath)
+        exportCSV(data, output_folder, "mazePath.csv")
+            
+    else:
+        print(validation[1])
+        exit()
+```
+Upon running the crosscompute command and supplying a CSV maze file input, we recieve a CSV showing the entire maze with the path being shown by **P**.
