@@ -8,7 +8,10 @@ Phase 1 of UNavMaze will consist of taking a maze CSV file as an input and then 
     - [Create Script](#create-runpy--reference)
   - [Iteration 2: Convert Maze to NetworkX Graph](#iteration-2)
     - [Goal](#goal-1)
+    - [Configure automate.yml: Adding an Environment](#configure-automateyml-adding-an-environment--reference)
   - [Iteration 3: Compute Path](#iteration-3)
+    - [Goal](#goal-2)
+    - [Configure run.py: Exporting Completed Path as CSV](#configure-runpy-exporting-completed-path-as-csv)
 
 # Iteration 1: Validity Checks
 ## Goal
@@ -319,7 +322,7 @@ Upon running the crosscompute command and supplying an input, we recieve an imag
 ## Goal
 For Iteration 3, we use NetworkX to find an optimal path using the A* algorithm. We will then display the outputted path as a CSV by concatenating the solution cells with a **P**.
 
-## Configure run.py
+## Configure run.py: Exporting Completed Path as CSV
 In order to find an optimal path using NetworkX, we first must identify the start and end points and note their position. So we create a function for locating the start and end points from a 2D list.
 ```py
 def locateStartAndEnd(mazeList):
