@@ -1,5 +1,3 @@
-from os import getenv
-from pathlib import Path
 import csv
 from sys import argv
 from os.path import join
@@ -81,13 +79,13 @@ def writeMaze(mazeList):
     for i in range(len(mazeList)):
         row = ""
         for j in range(len(mazeList[0])):
-            if row != "":
+            if row != "": # If we are not at the beginning of a row, add a space before we add the next entry
                 row += " "
-            if mazeList[i][j] == "":
+            if mazeList[i][j] == "": # If the entry is a blank cell, put a space in its place.
                 row += " "
             else:
-                row += str(mazeList[i][j])
-        mazeFile.write(row + "\n")
+                row += str(mazeList[i][j]) # Enter the entry in the cell
+        mazeFile.write(row + "\n") # Write the row to the txt and proceed to next row.
 ###
 
 completeName = join(input_folder, "data.csv")

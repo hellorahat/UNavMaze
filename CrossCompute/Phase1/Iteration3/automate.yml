@@ -3,7 +3,7 @@
 crosscompute: 0.9.4
 
 # name of your automation
-name: NavMaze
+name: UNavMaze
 
 # version of your automation
 version: 0.0.1
