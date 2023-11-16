@@ -8,10 +8,13 @@ Phase 1 of UNavMaze will consist of taking a maze CSV file as an input and then 
     - [Create Script](#create-runpy--reference)
   - [Iteration 2: Convert Maze to NetworkX Graph](#iteration-2)
     - [Goal](#goal-1)
-    - [Configure automate.yml: Adding an Environment](#configure-automateyml-adding-an-environment--reference)
+    - [Configure automate.yml](#configure-automateyml--reference-1)
+        - [Edit Output Variable](#edit-output-variable)
+        - [Adding an Environment](#adding-an-environment)
+    - [Configure run.py: Adding the listToNetworkXGraph function](#configure-runpy-adding-the-listtonetworkxgraph-function--reference)
   - [Iteration 3: Compute Path](#iteration-3)
     - [Goal](#goal-2)
-    - [Configure run.py: Exporting Completed Path as CSV](#configure-runpy-exporting-completed-path-as-csv)
+    - [Configure run.py: Exporting Completed Path as CSV](#configure-runpy-exporting-completed-path-as-csv--reference)
 
 # Iteration 1: Validity Checks
 ## Goal
@@ -235,11 +238,22 @@ Running the crosscompute command will now generate an interface that takes a CSV
 # Iteration 2
 ## Goal
 For Iteration 2 of our project, we will take a validated 2D list and create a weighted NetworkX graph from it. We will display the graph as an image using the CrossCompute framework.
-## Configure automate.yml: Adding an Environment | [Reference](https://github.com/hellorahat/UNavMaze/blob/main/CrossCompute/Phase1/Iteration2/automate.yml)
+## Configure automate.yml | [Reference](https://github.com/hellorahat/UNavMaze/blob/main/CrossCompute/Phase1/Iteration2/automate.yml)
+### Edit Output Variable
+We edit the output variable so we can output an image in the interface that CrossCompute creates:
+```yml
+# output configuration
+output:
+  variables:
+    - id: mazeFile
+      view: image
+      path: mazeGraph.png
+```
+### Adding an Environment 
 We're now adding libraries that need to be downloaded, so the *automate.yml* file must be configured to ensure that the libraries are automatically downloaded upon running the *crosscompute* command.
 <br/>
 We add the following lines at the bottom of our *automate.yml* to ensure the files are downloaded:
-```py
+```yml
 environment:
   packages:
     - id: networkx[default]
@@ -249,7 +263,7 @@ environment:
 ```
 We download the NetworkX library to create the graph, and Matplotlib in order to display it.
 
-## Configure run.py: Adding the listToNetworkXGraph function
+## Configure run.py: Adding the listToNetworkXGraph function | [Reference](https://github.com/hellorahat/UNavMaze/blob/main/CrossCompute/Phase1/Iteration2/run.py)
 We will add a new function to the script to convert a validated 2D maze into a weighted NetworkX graph.
 
 First we define a graph **G** to be a NetworkX graph of size `[row][col]`.
@@ -322,7 +336,7 @@ Upon running the crosscompute command and supplying an input, we recieve an imag
 ## Goal
 For Iteration 3, we use NetworkX to find an optimal path using the A* algorithm. We will then display the outputted path as a CSV by concatenating the solution cells with a **P**.
 
-## Configure run.py: Exporting Completed Path as CSV
+## Configure run.py: Exporting Completed Path as CSV | [Reference](https://github.com/hellorahat/UNavMaze/blob/main/CrossCompute/Phase1/Iteration3/run.py)
 In order to find an optimal path using NetworkX, we first must identify the start and end points and note their position. So we create a function for locating the start and end points from a 2D list.
 ```py
 def locateStartAndEnd(mazeList):

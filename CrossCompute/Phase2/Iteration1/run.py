@@ -228,7 +228,6 @@ def labelWeights(img, data, scale):
                 I1.text((v*scale+scale*.25,i*scale+scale*.1),entry,font=font,fill=(0,0,0))
             elif entry.lower() == "e":
                 I1.text((v*scale+scale*.25,i*scale+scale*.1),entry,font=font,fill=(0,0,0))
-    # I1.text((row*15,col*15),text,fill=(0,0,0))
 
 def createImage(data, scale):
     """
