@@ -234,7 +234,7 @@ def writeMaze(mazeList):
                 row += str(mazeList[i][j]) # Enter the entry in the cell
         mazeFile.write(row + "\n") # Write the row to the txt and proceed to next row.
 ```
-Running the crosscompute command will now generate an interface that takes a CSV maze as input, validates it, and outputs a txt if it is a valid maze.
+Running the `crosscompute` command will now generate an interface that takes a CSV maze as input, validates it, and outputs a txt if it is a valid maze.
 # Iteration 2
 ## Goal
 For Iteration 2 of our project, we will take a validated 2D list and create a weighted NetworkX graph from it. We will display the graph as an image using the CrossCompute framework.
@@ -331,7 +331,7 @@ with open(completeName, 'r') as file:
         print(validation[1])
         exit()
 ```
-Upon running the crosscompute command and supplying an input, we recieve an image of a weighted NetworkX graph as an output.
+Upon running the `crosscompute` command and supplying an input, we recieve an image of a weighted NetworkX graph as an output.
 # Iteration 3
 ## Goal
 For Iteration 3, we use NetworkX to find an optimal path using the A* algorithm. We will then display the outputted path as a CSV by concatenating the solution cells with a **P**.
@@ -399,4 +399,4 @@ with open(completeName, 'r') as file:
         print(validation[1])
         exit()
 ```
-Upon running the crosscompute command and supplying a CSV maze file input, we recieve a CSV showing the entire maze with the path being shown by **P**.
+Upon running the `crosscompute` command and supplying a CSV maze file input, we recieve a CSV showing the entire maze with the path being shown by **P**.
