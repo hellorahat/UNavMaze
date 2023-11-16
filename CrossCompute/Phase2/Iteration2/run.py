@@ -216,7 +216,7 @@ def putPixel(img, row, col, color, scale):
                     img.putpixel((xPos,yPos), (225,225,225))
                 else: # color darker shade of color to discern the outline
                     img.putpixel((xPos,yPos), (int(color[0]*.85),int(color[1]*.85),int(color[2]*.85)))
-            else: # if we are on at an outline pixel, color with normal color
+            else: # if we are not on at an outline pixel, color with normal color
                 img.putpixel((xPos,yPos), color)
 
 def labelWeights(img, data, scale):
@@ -272,9 +272,9 @@ def createImage(data, scale):
     img.save(completeName)
     
 def determineScale(data):
-    min,max = getMinAndMax(data)
-    maxInterval = 50
-    scale = maxInterval - (maxInterval * (max//maxInterval))
+    mazeMin,mazeMax = getMinAndMax(data)
+    maxScale = 50
+    scale = maxScale - (maxScale * (mazeMax//maxScale))
     return scale
 
 ###
