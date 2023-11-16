@@ -4,10 +4,10 @@ Phase 1 of UNavMaze will consist of taking a maze CSV file as an input and then 
 # Table of Contents
 - [Iteration 1](#iteration-1)
     - [Goal](#goal)
-    - [Configure automate.yml](#configure-automateyml)
+    - [Configure automate.yml](#configure-automateyml--reference)
         - [Edit Output Variable](#edit-output-variable)
         - [Configure Environment](#configure-environment)
-    - [Configure run.py](#configure-runpy)
+    - [Configure run.py](#configure-runpy--reference)
         - [The createImage Function](#the-createimage-function)
         - [The getMinMax Function](#the-getminandmax-function)
         - [Calculate RGB Value of Brown Based on Interval](#calculate-rgb-value-of-brown-based-on-interval)
@@ -15,7 +15,7 @@ Phase 1 of UNavMaze will consist of taking a maze CSV file as an input and then 
         - [The labelWeights Function](#the-labelweights-function)
 - [Iteration 2](#iteration-2)
     - [Goal](#goal-1)
-    - [Configure run.py](#configure-runpy-1)
+    - [Configure run.py](#configure-runpy--reference-1)
         - [Color Outlines of Squares](#color-outlines-of-squares)
         - [Adjust Scale Depending on Size](#adjust-scale-depending-on-size)
 
@@ -23,7 +23,7 @@ Phase 1 of UNavMaze will consist of taking a maze CSV file as an input and then 
 ## Goal
 Our goal for Iteration 1 is to use the Pillow library in order to create an image of a maze by coloring in pixels.
 
-## Configure automate.yml
+## Configure automate.yml | [Reference](https://github.com/hellorahat/UNavMaze/blob/main/CrossCompute/Phase2/Iteration1/automate.yml)
 ### Edit Output Variable
 The view is changed to **image** in order to output our image. The path will be changed to a **.png**
 ```yml
@@ -46,7 +46,7 @@ environment:
     - id: Pillow
       manager: pip
 ```
-## Configure run.py
+## Configure run.py | [Reference]()
 ### The createImage Function
 This function will create an image from our data and a **scale** parameter; **scale** will determine how large the image will be scaled.
 <br/>
@@ -206,7 +206,7 @@ Upon running the `crosscompute` command, we can now input a CSV maze and a maze 
 # Iteration 2
 ## Goal
 Our goal in Iteration 2 is to color the outlines of the squares so we can discern between each cell. Additionally, we will scale each maze so that larger mazes are scaled smaller, and smaller mazes are scaled larger, so overall they will cover approximately the same amount of space on the screen.
-## Configure run.py
+## Configure run.py | [Reference](https://github.com/hellorahat/UNavMaze/blob/main/CrossCompute/Phase2/Iteration2/run.py)
 ### Color Outlines of Squares
 In order to discern between each box, we now color the outlines of every box darker than it's original color.<br/>
 With the following line, we can determine the outline of every square:
