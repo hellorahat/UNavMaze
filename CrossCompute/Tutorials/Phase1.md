@@ -18,7 +18,7 @@ The rules for a CSV to be considered a maze are as follows:
 - There can be no more than one start point.
 - There can be no more than one end point.
 
-## Configure automate.yml | [Reference]()
+## Configure automate.yml | [Reference](https://github.com/hellorahat/UNavMaze/blob/main/CrossCompute/Phase1/Iteration1/automate.yml)
 The CrossCompute framework will create the interface that the user will use to enter the input data and view the output. To do this, we lay out a set of guidelines (automate.yml) that the framework will follow to identify key parts of our script.
 
 Our automate.yml will consist of the following information:
