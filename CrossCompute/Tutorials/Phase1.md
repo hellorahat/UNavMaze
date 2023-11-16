@@ -7,6 +7,7 @@ Phase 1 of UNavMaze will consist of taking a maze CSV file as an input and then 
     - [Configure automate.yml](#configure-automateyml--reference)
     - [Create Script](#create-runpy--reference)
   - [Iteration 2: Convert Maze to NetworkX Graph](#iteration-2)
+    - [Goal](#goal-1)
   - [Iteration 3: Compute Path](#iteration-3)
 
 # Iteration 1: Validity Checks
@@ -227,6 +228,92 @@ def writeMaze(mazeList):
                 row += str(mazeList[i][j]) # Enter the entry in the cell
         mazeFile.write(row + "\n") # Write the row to the txt and proceed to next row.
 ```
-
+Running the crosscompute command will now generate an interface that takes a CSV maze as input, validates it, and outputs a txt if it is a valid maze.
 # Iteration 2
+## Goal
+For Iteration 2 of our project, we will take a validated 2D list and create a weighted NetworkX graph from it. We will display the graph as an image using the CrossCompute framework.
+## Configure automate.yml: Adding an Environment | [Reference](https://github.com/hellorahat/UNavMaze/blob/main/CrossCompute/Phase1/Iteration2/automate.yml)
+We're now adding libraries that need to be downloaded, so the *automate.yml* file must be configured to ensure that the libraries are automatically downloaded upon running the *crosscompute* command.
+<br/>
+We add the following lines at the bottom of our *automate.yml* to ensure the files are downloaded:
+```py
+environment:
+  packages:
+    - id: networkx[default]
+      manager: pip
+    - id: matplotlib==3.7.2
+      manager: pip
+```
+We download the NetworkX library to create the graph, and Matplotlib in order to display it.
+
+## Configure run.py: Adding the listToNetworkXGraph function
+We will add a new function to the script to convert a validated 2D maze into a weighted NetworkX graph.
+
+First we define a graph **G** to be a NetworkX graph of size `[row][col]`.
+```py
+G = nx.grid_2d_graph(len(mazeList),len(mazeList[0]))
+```
+As we iterate through our NetworkX graph, we will scan the corresponding value in the 2D list.
+  - walls will be set to weight 999999
+  - cells with an integer weight will be set to that weight in the graph (a cell of 3 would be weighed as 3 in the graph).
+  - blank cells would be weighed as the default weight (1).
+
+```py
+for u,v,d in G.edges(data=True):
+  if mazeList[v[0]][v[1]] == "W": # cell is a wall
+      d["weight"] = 999999
+  elif isinstance(mazeList[v[0]][v[1]], int): # cell has a numerical weight
+      d["weight"] = int(mazeList[v[0]][v[1]])
+  else: # cell is empty
+      d["weight"] = 1
+```
+We can output the weights as an edgelist to ensure that all of the weights are correctly inputted.
+```py
+nx.write_weighted_edgelist(G, "weighted.edgelist")
+```
+We will now colorcode and label the graph before displaying it by using a **colorMap** that corresponds to each entry's position.
+<br/>
+Walls will be colored black, the start will be colored green, the end will be colored red, any weighted cell will be colored brown, and empty cells will be colored white.
+```py
+colorMap = []
+labels = dict()
+pos = dict()
+count = 0
+for i in range(len(mazeList)):
+    for j in range(len(mazeList[0])):
+        pos[i,j] = j,len(mazeList)-i
+        labels[i,j] = mazeList[i][j]
+        if mazeList[i][j] == "W":
+            colorMap.append("black")
+        elif mazeList[i][j] == "S":
+            colorMap.append("green")
+        elif mazeList[i][j] == "E":
+            colorMap.append("red")
+        elif mazeList[i][j].isnumeric():
+            colorMap.append("brown")
+        else:
+            colorMap.append("white")
+```
+We draw and save the graph using the following commands:
+```py
+nx.draw_networkx(G,pos, node_color=colorMap, labels=labels, font_size=6)
+plt.axis("off")
+completeName = join(output_folder, "mazeGraph.png")
+plt.savefig(completeName, format="PNG")
+```
+Lastly, we edit the end of our run.py to call the new function instead of writing to a txt:
+```py
+completeName = join(input_folder, "data.csv")
+with open(completeName, 'r') as file:
+    data = csvToList(file)
+    validation = validateMaze(data)
+    if validation[0]:
+      # writeMaze(data) # <- Deleted part
+        listToNetworkXGraph(data, display=True) # <- Added part
+    else:
+        print(validation[1])
+        exit()
+```
 # Iteration 3
+## Goal
+For Iteration 3, we use NetworkX to find an optimal path using the A* algorithm. We will then display the outputted path as a CSV by concatenating the solution cells with a **P**.

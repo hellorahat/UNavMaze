@@ -127,14 +127,7 @@ def listToNetworkXGraph(mazeList, display=False):
                     colorMap.append("brown")
                 else:
                     colorMap.append("white")
-        print(len(colorMap))
-        # for n in G:
-            # if n == (1,0):
-            #     colorMap.append('red')
-            # else:
-            #     colorMap.append('green')
         nx.draw_networkx(G,pos, node_color=colorMap, labels=labels, font_size=6)
-        # nx.draw_networkx(G,pos, node_color=colorMap, with_labels=False, font_size=6)
         plt.axis("off")
         completeName = join(output_folder, "mazeGraph.png")
         plt.savefig(completeName, format="PNG")
@@ -146,7 +139,6 @@ with open(completeName, 'r') as file:
     data = csvToList(file)
     validation = validateMaze(data)
     if validation[0]:
-        # writeMaze(data)
         listToNetworkXGraph(data, display=True)
     else:
         print(validation[1])
