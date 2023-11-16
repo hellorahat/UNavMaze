@@ -1,0 +1,41 @@
+---
+# version of crosscompute
+crosscompute: 0.9.4
+
+# name of your automation
+name: NavMaze
+
+# version of your automation
+version: 0.0.1
+
+# input configuration
+input:
+  # input variables
+  variables:
+    - id: data
+      view: file
+      path: data.csv
+
+# output configuration
+output:
+  variables:
+    - id: mazeImage
+      view: image
+      path: mazeImage.png
+
+# batches configuration
+batches:
+  - folder: batches/a
+
+# script configuration
+scripts:
+  - command: python3 run.py {input_folder} {output_folder}
+
+environment:
+  packages:
+    - id: networkx[default]
+      manager: pip
+    - id: matplotlib==3.7.2
+      manager: pip
+    - id: Pillow
+      manager: pip

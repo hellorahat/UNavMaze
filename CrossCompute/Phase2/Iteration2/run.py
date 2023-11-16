@@ -195,6 +195,8 @@ def getMinAndMax(data):
                         min = int(entry)
                     if int(entry) > max:
                         max = int(entry)
+    if min > max: # If we still have the sentinal value of 999999999 for min, we return 0
+        min = 0
     return min,max
         
 def putPixel(img, row, col, color, scale):
@@ -209,7 +211,13 @@ def putPixel(img, row, col, color, scale):
         for k in range(scale):
             xPos = (row*scale)+(j)
             yPos = (col*scale)+(k)
-            img.putpixel((xPos,yPos), color)
+            if j == 0 or k == 0 or j == scale-1 or k == scale-1: # check to see if we are at an outline pixel
+                if color == (255,255,255): # if white, we color outline with gray instead (empty cells)
+                    img.putpixel((xPos,yPos), (225,225,225))
+                else: # color darker shade of color to discern the outline
+                    img.putpixel((xPos,yPos), (int(color[0]*.85),int(color[1]*.85),int(color[2]*.85)))
+            else: # if we are on at an outline pixel, color with normal color
+                img.putpixel((xPos,yPos), color)
 
 def labelWeights(img, data, scale):
     I1 = ImageDraw.Draw(img)
@@ -256,10 +264,18 @@ def createImage(data, scale):
                     putPixel(img, v, i, (0,255,0), scale)
                 if data[i][v].lower() == "e": # if end, color red
                     putPixel(img, v, i, (255,0,0), scale)
+            else:
+                putPixel(img, v, i, (255,255,255), scale)
 
     labelWeights(img, data, scale)
     completeName = join(output_folder, "mazeImage.png")
     img.save(completeName)
+    
+def determineScale(data):
+    min,max = getMinAndMax(data)
+    maxInterval = 50
+    scale = maxInterval - (maxInterval * (max//maxInterval))
+    return scale
 
 ###
 completeName = join(input_folder, "data.csv")
@@ -272,7 +288,8 @@ with open(completeName, 'r') as file:
         startPoint, endPoint = locateStartAndEnd(data)
         shortestPath = calculatePath(G, startPoint, endPoint)
         mazeSolution(data, shortestPath)
-        createImage(data, 15)
+        scale = determineScale(data)
+        createImage(data, scale)
     else:
         print(validation[1])
         exit()
