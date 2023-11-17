@@ -266,24 +266,52 @@ We download the NetworkX library to create the graph, and Matplotlib in order to
 ## Configure run.py: Adding the listToNetworkXGraph function | [Reference](https://github.com/hellorahat/UNavMaze/blob/main/CrossCompute/Phase1/Iteration2/run.py)
 We will add a new function to the script to convert a validated 2D maze into a weighted NetworkX graph.
 
-First we define a graph **G** to be a NetworkX graph of size `[row][col]`.
+First we define a graph **G** to be a NetworkX directed multigraph.
 ```py
-G = nx.grid_2d_graph(len(mazeList),len(mazeList[0]))
+def listToNetworkXGraph:
+    G = nx.MultiDiGraph()
 ```
-As we iterate through our NetworkX graph, we will scan the corresponding value in the 2D list.
+Now we iterate through our 2D maze to fill in the graph with corresponding information.
+<br/>
+As we iterate through our list, we will create nodes which have an id that corresponds to its position on the list: <br/>
+```py
+for row in range(len(mazeList)):
+    for col in range(len(mazeList[0])):
+      G.add_node((row,col))
+```
+We will set the weight of the edges that connect the nodes as follows:
   - walls will be set to weight 999999
   - cells with an integer weight will be set to that weight in the graph (a cell of 3 would be weighed as 3 in the graph).
   - blank cells would be weighed as the default weight (1).
 
 ```py
-for u,v,d in G.edges(data=True):
-  if mazeList[u[0]][u[1]] == "W": # cell is a wall
-      d["weight"] = 999999
-  elif isinstance(mazeList[u[0]][u[1]], int): # cell has a numerical weight
-      d["weight"] = int(mazeList[u[0]][u[1]])
-  else: # cell is empty
-      d["weight"] = 1
+def addWeightedEdges(G, mazeList, currentEntry, nextEntry):
+    nextEntryValue = mazeList[nextEntry[0]][nextEntry[1]]
+    if nextEntryValue == "W":
+        G.add_weighted_edges_from([(currentEntry,nextEntry,999999)],weight="weight")
+    elif nextEntryValue.isnumeric():
+        G.add_weighted_edges_from([(currentEntry,nextEntry,int(nextEntryValue))],weight="weight")
+    else:
+        G.add_weighted_edges_from([(currentEntry,nextEntry,1)],weight="weight")
 ```
+Now we connect it to our `listToNetworkXGraph` function:
+
+```py
+def listToNetworkXGraph:
+    G = nx.MultiDiGraph()
+        for row in range(len(mazeList)):
+            for col in range(len(mazeList[0])):
+                G.add_node((row,col))
+                if row != 0: # If we are not in the first row, then we can connect edge to top of current row
+                    addWeightedEdges(G, mazeList, (row,col), (row-1,col))
+                if col != 0: # If we are not in the first col, then we can connect edge to left of current col
+                    addWeightedEdges(G, mazeList, (row,col), (row,col-1))
+                if row != len(mazeList)-1: # If we are not in the last row, then we can connect edge to bottom of current row
+                    addWeightedEdges(G, mazeList, (row,col), (row+1,col))
+                if col != len(mazeList[0])-1: # If we are not in the last col, then we can connect edge to right of current col
+                    addWeightedEdges(G, mazeList, (row,col), (row,col+1))
+```
+
 We can output the weights as an edgelist to ensure that all of the weights are correctly inputted.
 ```py
 nx.write_weighted_edgelist(G, "weighted.edgelist")
