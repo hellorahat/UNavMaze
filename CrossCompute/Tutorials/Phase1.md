@@ -277,10 +277,10 @@ As we iterate through our NetworkX graph, we will scan the corresponding value i
 
 ```py
 for u,v,d in G.edges(data=True):
-  if mazeList[v[0]][v[1]] == "W": # cell is a wall
+  if mazeList[u[0]][u[1]] == "W": # cell is a wall
       d["weight"] = 999999
-  elif isinstance(mazeList[v[0]][v[1]], int): # cell has a numerical weight
-      d["weight"] = int(mazeList[v[0]][v[1]])
+  elif isinstance(mazeList[u[0]][u[1]], int): # cell has a numerical weight
+      d["weight"] = int(mazeList[u[0]][u[1]])
   else: # cell is empty
       d["weight"] = 1
 ```
