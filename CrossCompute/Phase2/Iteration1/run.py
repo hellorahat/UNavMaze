@@ -96,6 +96,15 @@ def writeMaze(mazeList, fileName="maze.txt"):
                 row += str(mazeList[i][j])
         mazeFile.write(row + "\n")
         
+def addWeightedEdges(G, mazeList, currentEntry, nextEntry):
+    nextEntryValue = mazeList[nextEntry[0]][nextEntry[1]]
+    if nextEntryValue == "W":
+        G.add_weighted_edges_from([(currentEntry,nextEntry,999999)],weight="weight")
+    elif nextEntryValue.isnumeric():
+        G.add_weighted_edges_from([(currentEntry,nextEntry,int(nextEntryValue))],weight="weight")
+    else:
+        G.add_weighted_edges_from([(currentEntry,nextEntry,1)],weight="weight")
+        
 def listToNetworkXGraph(mazeList, display=False):
     """
     Converts a list to a weighted NetworkX graph.

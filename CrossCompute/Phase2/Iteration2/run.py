@@ -95,6 +95,15 @@ def writeMaze(mazeList, fileName="maze.txt"):
             else:
                 row += str(mazeList[i][j])
         mazeFile.write(row + "\n")
+     
+def addWeightedEdges(G, mazeList, currentEntry, nextEntry):
+    nextEntryValue = mazeList[nextEntry[0]][nextEntry[1]]
+    if nextEntryValue == "W":
+        G.add_weighted_edges_from([(currentEntry,nextEntry,999999)],weight="weight")
+    elif nextEntryValue.isnumeric():
+        G.add_weighted_edges_from([(currentEntry,nextEntry,int(nextEntryValue))],weight="weight")
+    else:
+        G.add_weighted_edges_from([(currentEntry,nextEntry,1)],weight="weight")
         
 def listToNetworkXGraph(mazeList, display=False):
     """
@@ -103,14 +112,18 @@ def listToNetworkXGraph(mazeList, display=False):
     :param display (bool): Whether to display the graph. Default is False.
     :return: graph
     """
-    G = nx.grid_2d_graph(len(mazeList),len(mazeList[0])) # Create a row X col NetworkX grid.
-    for u,v,d in G.edges(data=True):
-        if mazeList[u[0]][u[1]] == "W":
-            d["weight"] = 999999
-        elif mazeList[u[0]][u[1]].isnumeric():
-            d["weight"] = int(mazeList[u[0]][u[1]])
-        else:
-            d["weight"] = 1
+    G = nx.MultiDiGraph()
+    for row in range(len(mazeList)):
+        for col in range(len(mazeList[0])):
+            G.add_node((row,col))
+            if row != 0: # If we are not in the first row, then we can connect edge to top of current row
+                addWeightedEdges(G, mazeList, (row,col), (row-1,col))
+            if col != 0: # If we are not in the first col, then we can connect edge to left of current col
+                addWeightedEdges(G, mazeList, (row,col), (row,col-1))
+            if row != len(mazeList)-1: # If we are not in the last row, then we can connect edge to bottom of current row
+                addWeightedEdges(G, mazeList, (row,col), (row+1,col))
+            if col != len(mazeList[0])-1: # If we are not in the last col, then we can connect edge to right of current col
+                addWeightedEdges(G, mazeList, (row,col), (row,col+1))
     nx.write_weighted_edgelist(G, "weighted.edgelist")
     if display==True:
         colorMap = []
@@ -131,12 +144,6 @@ def listToNetworkXGraph(mazeList, display=False):
                     colorMap.append("brown")
                 else:
                     colorMap.append("white")
-        print(len(colorMap))
-        # for n in G:
-            # if n == (1,0):
-            #     colorMap.append('red')
-            # else:
-            #     colorMap.append('green')
         nx.draw_networkx(G,pos, node_color=colorMap, labels=labels, font_size=6)
         # nx.draw_networkx(G,pos, node_color=colorMap, with_labels=False, font_size=6)
         plt.axis("off")
