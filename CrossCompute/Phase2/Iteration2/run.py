@@ -105,10 +105,10 @@ def listToNetworkXGraph(mazeList, display=False):
     """
     G = nx.grid_2d_graph(len(mazeList),len(mazeList[0])) # Create a row X col NetworkX grid.
     for u,v,d in G.edges(data=True):
-        if mazeList[v[0]][v[1]] == "W":
+        if mazeList[u[0]][u[1]] == "W":
             d["weight"] = 999999
-        elif mazeList[v[0]][v[1]].isnumeric():
-            d["weight"] = int(mazeList[v[0]][v[1]])
+        elif mazeList[u[0]][u[1]].isnumeric():
+            d["weight"] = int(mazeList[u[0]][u[1]])
         else:
             d["weight"] = 1
     nx.write_weighted_edgelist(G, "weighted.edgelist")
@@ -145,7 +145,7 @@ def listToNetworkXGraph(mazeList, display=False):
     return G
 
 def calculatePath(G, startPoint, endPoint):
-    return nx.astar_path(G, startPoint, endPoint)
+    return nx.astar_path(G, startPoint, endPoint, weight="weight")
 
 def locateStartAndEnd(mazeList):
     startPoint = (0,0)
