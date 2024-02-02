@@ -25,7 +25,9 @@ output:
 
 # batches configuration
 batches:
-  - folder: batches/a
+  - folder: batches/example1
+  - folder: batches/example2
+  - folder: batches/example3
 
 # script configuration
 scripts:
