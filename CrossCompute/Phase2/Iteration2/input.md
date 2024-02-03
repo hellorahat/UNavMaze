@@ -1,5 +1,5 @@
 # UNavMaze: Maze Solver App
-
+{ csv }
 ## Display the Shortest Path in Weighted Mazes Effortlessly
 UNavMaze quickly gives visualizations of the shortest path for mazes. Simply provide a csv file as input and the application will display the shortest path for you.
 
