@@ -10,12 +10,6 @@ In order to use UNavMaze, first create a csv file for the maze.
 - Weighted cells can be denoted by using integers.
 - Empty cells automatically default to a weight of 1.
 
-Here's a simple example for the input csv maze:
-|   |   |   |   |   |
-|---|---|---|---|---|
-| S |   | 2 | 5 | 2 |
-| 2  | 3 |   | 3  |  3 |
-|   |   | 2  | 3  |   |
-|   | 6  | 2 |   | E |
+After providing the csv input to UNavMaze, the app will output the visualization of the maze with the calculated path from the start point to the end point as a png file.
 
-After providing the csv input to UNavMaze, the app will output the visualization of the maze with the calculated path as a png file.
+{ data }
