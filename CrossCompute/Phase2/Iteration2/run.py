@@ -227,7 +227,10 @@ def putPixel(img, row, col, color, scale):
 
 def labelWeights(img, data, scale):
     I1 = ImageDraw.Draw(img)
-    font = ImageFont.truetype("arial.ttf",scale*.75) # arial must be installed on system
+    try:
+        font = ImageFont.truetype("arial.ttf",scale*.75)
+    except OSError:
+        font = ImageFont.truetype("NotoSans[wght].ttf", scale * .75) 
     for i in range(len(data)):
         for v in range(len(data[0])):
             entry = data[i][v]
